@@ -1,4 +1,10 @@
-SQL Studio
+LaunchCode CoderGirl C# Web Development
+
+## SQL / MySQL 
+
+Written in markdown format to easily copy-paste for reviewing purposes:
+
+### 17.5. Studio: Movie SQLs
 
 8. If you list all of the data from the `movies` table (`SELECT * FROM movies;`), you will see a column of director ID numbers. This data is not particularly helpful to a user, since they probably want to see the director names instead. Use an `INNER JOIN` in your SQL command to display a list of movie titles, years released, and director last names.
 
@@ -66,3 +72,36 @@ WHERE title = "The Incredibles";
     13. Try to delete one person from the `directors` table. What error results from trying to remove a director?
 
     --- Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails (`movie-buff`.`movies`, CONSTRAINT `movies_ibfk_1` FOREIGN KEY (`director_id`) REFERENCES `directors` (`director_id`))
+
+### 18.2 Database Management
+
+1. Setup:
+
+   ```mysql
+   CREATE TABLE writing_supply (
+   	supply_id INT PRIMARY KEY AUTO_INCREMENT,
+       utensil_type ENUM("Pencil", "Pen"),
+       num_drawers INT
+   );
+   
+   CREATE TABLE pencil_drawer (
+   	drawer_id INT PRIMARY KEY AUTO_INCREMENT,
+       pencil_type ENUM("Wood", "Mechanical"),
+       quantity INT,
+       refill BOOLEAN,
+       supply_id INT,
+       FOREIGN KEY (supply_id) REFERENCES writing_supply(supply_id)
+   );
+   
+   CREATE TABLE pen_drawer (
+   	drawer_id INT PRIMARY KEY AUTO_INCREMENT,
+       color ENUM("Black", "Blue", "Red", "Green", "Purple"),
+       quantity INT,
+       refill BOOLEAN,
+       supply_id INT,
+       FOREIGN KEY (supply_id) REFERENCES writing_supply(supply_id)
+   );
+   ```
+
+   
+
