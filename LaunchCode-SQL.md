@@ -1,10 +1,12 @@
+
+
 LaunchCode CoderGirl C# Web Development
 
 ## SQL / MySQL 
 
 Written in markdown format to easily copy-paste for reviewing purposes:
 
-### 17.5. Studio: Movie SQLs
+#### 17.5. Studio: Movie SQLs
 
 8. If you list all of the data from the `movies` table (`SELECT * FROM movies;`), you will see a column of director ID numbers. This data is not particularly helpful to a user, since they probably want to see the director names instead. Use an `INNER JOIN` in your SQL command to display a list of movie titles, years released, and director last names.
 
@@ -75,7 +77,7 @@ WHERE title = "The Incredibles";
 
 ### 18.2 Database Management
 
-1. Setup:
+1. #### Setup:
 
    ```mysql
    CREATE TABLE writing_supply (
@@ -103,5 +105,67 @@ WHERE title = "The Incredibles";
    );
    ```
 
+   **Using subqueries**
    
+   1. Retrieve the `supply_id` values for any `writing_supply` containers that hold pens.
+   2. Using the `supply_id` values, retrieve the ID and `color` values for any drawers in the last container that hold 60 or more pens.
+   
+   ```mysql
+   SELECT 
+       drawer_id, color
+   FROM
+       pen_drawer
+   WHERE
+       supply_id IN (SELECT 
+               supply_id
+           FROM
+               writing_supply
+           WHERE
+               utensil_type = 'Pen')
+           AND quantity >= 60;
+   ```
+   
+   
+   
+   #### 18.4 Exercises:
+   
+   1. Create the tables
+   
+      plant table:
+   
+      ```mysql
+      CREATE TABLE plant (
+      	plant_id INT PRIMARY KEY AUTO_INCREMENT,
+          plant_name VARCHAR(150),
+          zone INT,
+          season VARCHAR(10)
+      );
+      ```
+   
+      seeds table:
+   
+      ```mysql
+      CREATE TABLE seeds (
+      	seed_id INT PRIMARY KEY AUTO_INCREMENT,
+          expiration_date DATE,
+          quantity INT,
+          reorder BOOL,
+          plant_id INT,
+          FOREIGN KEY (plant_id) REFERENCES plant(plant_id)
+      );
+      ```
+   
+      garden_bed table:
+   
+      ```mysql
+      CREATE TABLE garden_bed (
+      	space_number INT PRIMARY KEY AUTO_INCREMENT,
+          date_planted DATE,
+          doing_well BOOL,
+          plant_id INT,
+          FOREIGN KEY (plant_id) REFERENCES plant(plant_id)
+      );
+      ```
+   
+      
 
