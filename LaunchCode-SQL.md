@@ -187,17 +187,137 @@ SELECT title, isbn FROM book WHERE genre_id = 6;
    ON author.author_id = book.author_id
    WHERE
        deathday IS NULL;
-    ```
+   ```
 
 **Loan Out a Book**
 
-1. ```mysql
-   UPDATE book SET available = FALSE WHERE book_id = 6;
+1. Change `available` to `FALSE` for the appropriate book
+   
+   ```mysql
+UPDATE book SET available = FALSE WHERE book_id = 6;
    ```
-
-2. ```mysql
-   INSERT INTO loan (patron_id, date_in, book_id)
-   VALUE ();
+   
+2. Update the appropriate `patron` with the `loan_id` for the new row created in the `loan` table.
+   
+   ```mysql
+   INSERT INTO loan (patron_id, date_out, book_id)
+VALUE (27, now(), 15); 
+   
+   -- updated date_out entry because now() inserts time, only date needed
+   UPDATE loan
+   SET date_out = current_date()
+   WHERE loan_id = 1;
    ```
+   
+   3. Update the appropriate `patron` with the `loan_id` for the new row created in the `loan` table
 
-3. 
+```mysql
+UPDATE loan
+SET patron_id = 3
+WHERE loan_id = 1;
+
+-- above was wrong, dhoud have updated the patron table, not loan table
+UPDATE patron
+SET loan_id = 1
+WHERE patron_id = 3;
+```
+
+**Check a Book Back In**
+
+LOAN TABLE:
+
+```mysql
+CREATE TABLE loan (
+   loan_id INT AUTO_INCREMENT PRIMARY KEY,
+   patron_id INT,
+   date_out DATE,
+   date_in DATE,
+   book_id INT,
+   FOREIGN KEY (book_id)
+      REFERENCES book(book_id)
+      ON UPDATE SET NULL
+      ON DELETE SET NULL
+);
+```
+
+REFERENCE_BOOK TABLE:
+
+```mysql
+CREATE TABLE reference_books (
+   reference_id INT AUTO_INCREMENT PRIMARY KEY,
+   edition INT,
+   book_id INT,
+   FOREIGN KEY (book_id)
+      REFERENCES book(book_id)
+      ON UPDATE SET NULL
+      ON DELETE SET NULL
+);
+```
+
+
+
+###### A foreign key with "set null on delete" means that if a record in the parent table is deleted, then the corresponding records in the child table will have the foreign key fields set to NULL. The records in the child table will ***not*** be deleted in SQL Server.
+
+1. Change `available` to `TRUE` for the appropriate book.
+
+```mysql
+UPDATE book 
+SET available = TRUE 
+WHERE book_id = 15;
+
+UPDATE loan
+SET date_in = current_date()
+WHERE loan_id = 1;
+
+-- this didn't work, safe update mode
+UPDATE loan
+SET loan_id = NULL
+WHERE patron_id = 3;
+-- didn't work either, cannot set loan_id to NULL
+UPDATE loan
+SET loan_id = NULL
+WHERE patron_id = 3 and loan_id > 0;
+-- updated the book title but did not set the loan_id to NULL
+UPDATE book
+SET title = "PERSISTENCE"
+WHERE book_id = 15;
+
+-- tried deleting a book to check if loan_id in loan table will change to NULL. It did not but patron table loan_id is set to NULL
+DELETE FROM book
+WHERE book_id = 15;
+
+
+-- Tried again, realizing my mistake from Loan Out a Book #3
+-- added a new loan again, set the loan_id in the patron table
+INSERT INTO loan (patron_id, date_out, book_id)
+VALUE (46, current_date(), 35); 
+
+UPDATE patron
+SET loan_id = 2
+WHERE patron_id = 46;
+
+-- added this because I though updating the book details (parent table) will affect child table's records to be NULL
+UPDATE book
+SET title = "Set Fire to the Rain"
+WHERE book_id = 35;
+-- I was wrong
+-- instructions just simply say to update patron table' loan_id, book table's availability, and loan table's date_in/date_out. DO NOT OVERTHINK! :D
+UPDATE book 
+SET available = FALSE 
+WHERE book_id = 35;
+```
+
+
+
+**Wrap-up Query**
+
+Write a query to wrap up the studio. This query should return the names of the patrons with the genre of every book they currently have checked out
+
+**Bonus Mission**
+
+1. Return the counts of the books of each genre. Check out the [documentation](https://dev.mysql.com/doc/refman/8.0/en/counting-rows.html) to see how this could be done!
+
+```mysql
+SELECT genre_id, COUNT(*) FROM book GROUP BY genre_id;
+```
+
