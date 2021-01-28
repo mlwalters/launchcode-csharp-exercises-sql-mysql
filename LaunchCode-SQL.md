@@ -167,5 +167,37 @@ WHERE title = "The Incredibles";
       );
       ```
    
-      
 
+### 18.5 Studio
+
+**Warm-up queries**
+
+1. Return the mystery book titles and their ISBNs.
+
+```mysql
+SELECT title, isbn FROM book WHERE genre_id = 6;
+```
+
+2.  ```mysql
+   SELECT 
+       title, first_name, last_name
+   FROM
+       author
+   LEFT OUTER JOIN book
+   ON author.author_id = book.author_id
+   WHERE
+       deathday IS NULL;
+    ```
+
+**Loan Out a Book**
+
+1. ```mysql
+   UPDATE book SET available = FALSE WHERE book_id = 6;
+   ```
+
+2. ```mysql
+   INSERT INTO loan (patron_id, date_in, book_id)
+   VALUE ();
+   ```
+
+3. 
