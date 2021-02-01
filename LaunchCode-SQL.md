@@ -188,6 +188,21 @@ SELECT title, isbn FROM book WHERE genre_id = 6;
    WHERE
        deathday IS NULL;
    ```
+   
+   Another possible answer:
+
+```mysql
+SELECT 
+    book.title, author.first_name, author.last_name
+FROM
+    book
+INNER JOIN author
+ON book.author_id = author.author_id
+WHERE
+    author.deathday IS NULL;
+```
+
+
 
 **Loan Out a Book**
 
