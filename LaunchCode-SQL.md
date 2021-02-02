@@ -8,6 +8,33 @@ Written in markdown format to easily copy-paste for reviewing purposes:
 
 #### 17.5. Studio: Movie SQLs
 
+1-7:
+
+```mysql
+SELECT title FROM movies;
+
+SELECT title, year_released
+FROM movies
+ORDER BY year_released Desc; 
+
+SELECT * FROM directors
+ORDER BY country ASC;
+
+SELECT * FROM directors
+ORDER BY country, last_name ASC;
+
+INSERT INTO directors (first_name, last_name, country)
+VALUES ("Rob", "Reiner", "USA");
+
+SELECT last_name, director_id FROM directors
+WHERE first_name="Rob" AND last_name="Reiner";
+
+INSERT INTO movies (title, year_released, director_id)
+VALUES ("The Princess Bride", 1987, 11);
+```
+
+
+
 8. If you list all of the data from the `movies` table (`SELECT * FROM movies;`), you will see a column of director ID numbers. This data is not particularly helpful to a user, since they probably want to see the director names instead. Use an `INNER JOIN` in your SQL command to display a list of movie titles, years released, and director last names.
 
    ```mysql
@@ -168,7 +195,7 @@ WHERE title = "The Incredibles";
       ```
    
 
-### 18.5 Studio
+### 18.5 Studio: A Library
 
 **Warm-up queries**
 
